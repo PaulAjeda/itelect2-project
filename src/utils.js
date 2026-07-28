@@ -1,16 +1,19 @@
 // format date
-export const formatDate = (date) => {
-    return `Due: ${date.toLocaleDateString()}`;
-};
-
+export const formatDate = (date) =>  `Due: ${date.toLocaleDateString()}`;
 
 // check task
 export const validateTask = ({title, dueDate} = {}) => {
-    return title && dueDate ? true : false;
+    return Boolean(title && dueDate);
 };
 
 
 // update task
 export const mergeTaskUpdate = (original, ...updates) => {
-    return {...original, ...updates[0]};
+    return updates.reduce(
+        (merged, update) => ({
+            ...merged,
+            ...update
+        }),
+        orginal
+    );
 };

@@ -1,6 +1,5 @@
 import { formatDate, validateTask, mergeTaskUpdate } from "./utils.js";
 
-
 //formatDate
 console.log(formatDate(new Date("2026-07-22")));
 
@@ -23,11 +22,9 @@ const oldTask = {
     status: "Pending"
 };
 
-const newTask = {
-    dueDate: "2026-07-15"
-};
+console.log(mergeTaskUpdate(oldTask, 
+    {dueDate: "2026-07-15" },
+    { status: "Completed" }
 
-console.log("Old Task:", oldTask);
-console.log("New Update:", newTask);
-
-console.log("Updated Task:", mergeTaskUpdate(oldTask, newTask));
+    )
+);
