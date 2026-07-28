@@ -1,19 +1,41 @@
 // format date
 export const formatDate = (date) =>  `Due: ${date.toLocaleDateString()}`;
 
-// check task
+// validate task
 export const validateTask = ({title, dueDate} = {}) => {
     return Boolean(title && dueDate);
 };
 
 
-// update task
+// merge task update
 export const mergeTaskUpdate = (original, ...updates) => {
     return updates.reduce(
         (merged, update) => ({
             ...merged,
             ...update
         }),
-        orginal
+        original
     );
 };
+
+// task validation error
+
+class TaskValidationError extends Error {
+    constructor(message) {
+        super(message);
+        this.name = "TaskValidationError";
+    }
+}
+
+// create task
+export const createTask = (taskData) => {
+    if (!validateTask(taskData)) {
+        throw new TaskValidationError("Invalid task data");
+    }
+    return {
+        id: Date.now(),
+        completed: false,
+        ...taskData
+    }
+}
+
