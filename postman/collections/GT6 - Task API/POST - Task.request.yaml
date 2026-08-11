@@ -1,0 +1,13 @@
+$kind: http-request
+url: http://localhost:3000/api/tasks
+method: POST
+body:
+  type: json
+  content: "{\r
+
+    \  \"title\": \"Task 4\",\r
+
+    \  \"dueDate\": \"2026-07-25\"\r
+
+    }"
+order: 3897796519180465
