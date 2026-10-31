@@ -1,5 +1,7 @@
 import express from "express";
 import db from "../models/index.cjs";
+import verifyToken from "../middleware/verifyToken.js";
+import requireRole from "../middleware/requireRole.js";
 
 const { Task, User } = db;
 
@@ -39,15 +41,15 @@ router.get("/users", async (req, res) => {
     res.status(200).json(users);
 });
 
-// POST a new task
-router.post("/tasks", async (req, res) => {
+// POST a new task (requires authentication)
+router.post("/tasks", verifyToken, async (req, res) => {
     const newTask = await Task.create(req.body);
 
     res.status(201).json(newTask);
 });
 
-// PUT/update a task
-router.put("/tasks/:id", async (req, res) => {
+// PUT/update a task (requires authentication)
+router.put("/tasks/:id", verifyToken, async (req, res) => {
     const task = await Task.findByPk(req.params.id);
 
     if (!task) {
@@ -59,8 +61,8 @@ router.put("/tasks/:id", async (req, res) => {
     res.status(200).json(task);
 });
 
-// DELETE a task
-router.delete("/tasks/:id", async (req, res) => {
+// DELETE a task (requires admin role)
+router.delete("/tasks/:id", verifyToken, requireRole("admin"), async (req, res) => {
     const task = await Task.findByPk(req.params.id);
 
     if (!task) {
@@ -71,7 +73,8 @@ router.delete("/tasks/:id", async (req, res) => {
 
     res.status(200).json({
         message: "Deleted",
-        task
+        task,
+        deletedBy: req.user.email
     });
 });
 
