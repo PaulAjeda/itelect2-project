@@ -1,28 +1,20 @@
-import express from "express";
+
 import db from "../models/index.cjs";
-import verifyToken from "../middleware/verifyToken.js";
-import requireRole from "../middleware/requireRole.js";
 
 const { Task, User } = db;
 
-const router = express.Router();
-
-router.get("/", (req, res) => {
-    res.json({ message: "Hello from the router!" });
-});
-
-// GET all tasks with their users
-router.get("/tasks", async (req, res) => {
+// GET /api/tasks
+export async function listTasks(req, res) {
     const tasks = await Task.findAll({
         include: User,
         order: [["id", "ASC"]]
     });
 
     res.status(200).json(tasks);
-});
+}
 
-// GET one task by ID with its user
-router.get("/tasks/:id", async (req, res) => {
+// GET /api/tasks/:id
+export async function getTask(req, res) {
     const task = await Task.findByPk(req.params.id, {
         include: User
     });
@@ -32,24 +24,24 @@ router.get("/tasks/:id", async (req, res) => {
     }
 
     res.status(200).json(task);
-});
+}
 
-// GET all users
-router.get("/users", async (req, res) => {
+// GET /api/users
+export async function listUsers(req, res) {
     const users = await User.findAll();
 
     res.status(200).json(users);
-});
+}
 
-// POST a new task (requires authentication)
-router.post("/tasks", verifyToken, async (req, res) => {
+// POST /api/tasks
+export async function createTask(req, res) {
     const newTask = await Task.create(req.body);
 
     res.status(201).json(newTask);
-});
+}
 
-// PUT/update a task (requires authentication)
-router.put("/tasks/:id", verifyToken, async (req, res) => {
+// PUT /api/tasks/:id
+export async function updateTask(req, res) {
     const task = await Task.findByPk(req.params.id);
 
     if (!task) {
@@ -59,10 +51,10 @@ router.put("/tasks/:id", verifyToken, async (req, res) => {
     await task.update(req.body);
 
     res.status(200).json(task);
-});
+}
 
-// DELETE a task (requires admin role)
-router.delete("/tasks/:id", verifyToken, requireRole("admin"), async (req, res) => {
+// DELETE /api/tasks/:id
+export async function deleteTask(req, res) {
     const task = await Task.findByPk(req.params.id);
 
     if (!task) {
@@ -76,6 +68,4 @@ router.delete("/tasks/:id", verifyToken, requireRole("admin"), async (req, res) 
         task,
         deletedBy: req.user.email
     });
-});
-
-export default router;
+}
