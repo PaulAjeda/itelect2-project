@@ -198,3 +198,10 @@ GET /api/users returns the users from PostgreSQL with status code 200.
 
 ---
 
+## Live Deployment
+
+The Task Manager API is deployed on Render.
+
+**Live URL:** https://itelect2-project-g97n.onrender.com
+
+**Example Endpoint:** https://itelect2-project-g97n.onrender.com/api/tasks
